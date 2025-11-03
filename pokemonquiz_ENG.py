@@ -26,7 +26,7 @@ class GenerationSelect(View):
         """初期設定"""
         super().__init__(timeout=60)
         options = [
-            discord.SelectOption(label="第1世代", value="generation-i"),
+            discord.SelectOption(label="初代", value="generation-i"),
             discord.SelectOption(label="第2世代", value="generation-ii"),
             discord.SelectOption(label="第3世代", value="generation-iii"),
             discord.SelectOption(label="第4世代", value="generation-iv"),
@@ -107,7 +107,7 @@ def get_generation_japanese(data):
     """登場世代を日本語で返す"""
     gen_en = data.get("generation", {}).get("name", "")
     mapping = {
-        "generation-i": "第1世代",
+        "generation-i": "初代",
         "generation-ii": "第2世代",
         "generation-iii": "第3世代",
         "generation-iv": "第4世代",
