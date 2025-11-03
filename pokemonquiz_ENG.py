@@ -161,6 +161,15 @@ def has_regional_form(data):
     message = "リージョンがいないよ"
     return message
 
+def has_mega_form(data):
+    """varietiesの中にメガシンカフォームが含まれているか確認"""
+    varieties = data.get("varieties", [])
+    for v in varieties:
+        name = v["pokemon"]["name"]
+        if "mega" in name:
+            return "メガシンカするよ"
+    return "メガシンカしないよ"
+
 def get_base_stats(detail_data):
     """種族値を取得"""
     stats = detail_data.get("stats", [])
@@ -251,7 +260,7 @@ async def start_quiz(channel, selected_generations):
         return
 
     pokemon_id = random.choice(available_ids)
-    # pokemon_id = 664 # テスト用
+    # pokemon_id = 6 # テスト用
     used_ids.append(pokemon_id)
 
     species_data = await get_pokemon_species_data(pokemon_id)
@@ -274,6 +283,7 @@ async def start_quiz(channel, selected_generations):
     types = get_types(detail_data)
     abilities = get_abilities(detail_data)
     regional_exists = has_regional_form(species_data)
+    mega_exists = has_mega_form(species_data)
     base_stats = get_base_stats(detail_data)
 
     print("--------------------------------------------------------------")
@@ -295,6 +305,7 @@ async def start_quiz(channel, selected_generations):
         "types": types,
         "abilities": abilities,
         "regional_exists": regional_exists,
+        "mega_exists": mega_exists,
         "stats": base_stats,
         "first_char": name_first_hint
     }
@@ -303,7 +314,7 @@ async def start_quiz(channel, selected_generations):
     await channel.send(
         f"👉**{name_en}**\n"
         f"図鑑説明：`{flavor_en}`\n"
-        f"ヒントのコマンド: `世代` `色` `形` `生息地` `タマゴグループ` `タイプ` `特性` `リージョン` `種族値` `最初の文字`\n"
+        f"ヒントのコマンド: `世代` `色` `形` `生息地` `タマゴグループ` `タイプ` `特性` `リージョン` `メガ` `種族値` `最初の文字`\n"
         f"ギブアップ:`降参`\n"
         f"回答例: `aフシギダネ`"
     )
@@ -390,6 +401,7 @@ async def on_message(message):
             "タイプ": quiz_data['types'],
             "特性": quiz_data['abilities'],
             "リージョン" :quiz_data['regional_exists'],
+            "メガ": quiz_data['mega_exists'],
             "種族値": quiz_data["stats"],
             "最初の文字": quiz_data["first_char"]
             }
