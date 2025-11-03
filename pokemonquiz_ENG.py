@@ -241,14 +241,16 @@ async def start_quiz(channel, selected_generations):
         return
     
     used_ids = prev_data.get("used_ids", [])
+    print(f"[DEBUG] Used IDs: {used_ids}")
 
     available_ids = [pid for pid in id_pool if pid not in used_ids]
+    print(f"[DEBUG] Available IDs: {available_ids}")
     if not available_ids:
         await channel.send("🎉 選んだ世代の全ポケモンを出題し終えました！\nもう一度やるには「問題」と入力してね。")
         del active_quizzes[channel.id]
         return
 
-    pokemon_id = random.choice(id_pool)
+    pokemon_id = random.choice(available_ids)
     # pokemon_id = 664 # テスト用
     used_ids.append(pokemon_id)
 
